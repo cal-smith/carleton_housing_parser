@@ -1,0 +1,24 @@
+<html>
+<head>
+	<style type="text/css">
+	.listing{
+		max-width: 800px;
+	}
+	.controls{
+
+	}
+	</style>
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+</head>
+<body>
+	<div class="controls">
+		<h2>Limit by:</h2>
+
+	</div>
+	<div class="listing">
+		<% for posting in listing %>
+			<p><%= posting[5] %><p>
+		<% end %>
+	</div>
+</body>
+</html>
