@@ -1,5 +1,6 @@
 <html>
 <head>
+	<title>Housing</title>
 	<style type="text/css">
 	.listing{
 		max-width: 800px;
@@ -7,18 +8,90 @@
 	.controls{
 
 	}
+	.zones{
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+	.zones span{
+		margin: 5px;
+		background: aquamarine;
+		padding: 5px;
+		display: block;
+		float: left;
+		cursor: pointer;
+	}
+	.selected{
+		background-color: aqua !important;/*fix this*/
+	}
 	</style>
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 </head>
 <body>
 	<div class="controls">
 		<h2>Limit by:</h2>
-
+		<div>Zones:</div>
+		<div class="zones">
+			<span id="algonquin" onclick="housing.add('algonquin')">Algonquin</span>
+			<span id="alta-vista" onclick="housing.add('alta-vista')">Alta Vista</span>
+			<span id="aylmer" onclick="housing.add('aylmer')">Aylmer</span>
+			<span id="barrhaven" onclick="housing.add('barrhaven')">Barrhaven</span>
+			<span id="bells-corner" onclick="housing.add('bells-corner')">Bell’s Corner</span>
+			<span id="billings-bridge" onclick="housing.add('billings-bridge')">Billing’s Bridge</span>
+			<span id="britannia" onclick="housing.add('britannia')">Britannia</span>
+			<span id="byward-market" onclick="housing.add('byward-market')">Byward Market</span>
+			<span id="carlingwood" onclick="housing.add('carlingwood')">carlingwood</span>
+			<span id="central-west" onclick="housing.add('central-west')">Central West</span>
+			<span id="centretown" onclick="housing.add('centretown')">Centretown</span>
+			<span id="china-town" onclick="housing.add('china-town')">China Town</span>
+			<span id="civic" onclick="housing.add('civic')">Civic</span>
+			<span id="dows-lake" onclick="housing.add('dows-lake')">Dow's Lake</span>
+			<span id="downtown" onclick="housing.add('downtown')">Downtown</span>
+			<span id="experimental-farm" onclick="housing.add('experimental-farm')">Experimental Farm</span>
+			<span id="gatineau-hull" onclick="housing.add('gatineau-hull')">Gatineau/Hull</span>
+			<span id="glebe" onclick="housing.add('glebe')">Glebe</span>
+			<span id="gloucester" onclick="housing.add('gloucester')">Gloucester</span>
+			<span id="herongate" onclick="housing.add('herongate')">Herongate</span>
+			<span id="hogs-back" onclick="housing.add('hogs-back')">Hog’s Back</span>
+			<span id="hull" onclick="housing.add('hull')">Hull</span>
+			<span id="hunt-club" onclick="housing.add('hunt-club')">Hunt Club</span>
+			<span id="kanata" onclick="housing.add('kanata')">Kanata</span>
+			<span id="little-italy" onclick="housing.add('little-italy')">Little Italy</span>
+			<span id="lowertown" onclick="housing.add('lowertown')">Lowertown</span>
+			<span id="main" onclick="housing.add('main')">Main</span>
+			<span id="mooneys-bay" onclick="housing.add('mooneys-bay')">Mooney’s Bay</span>
+			<span id="navan" onclick="housing.add('navan')">Navan</span>
+			<span id="nepean" onclick="housing.add('nepean')">Nepean</span>
+			<span id="nepean-south" onclick="housing.add('nepean-south')">Nepean South</span>
+			<span id="old-ottawa-east" onclick="housing.add('old-ottawa-east')">Old Ottawa East</span>
+			<span id="old-ottawa-south" onclick="housing.add('old-ottawa-south')">Old Ottawa South</span>
+			<span id="orleans" onclick="housing.add('orleans')">Orleans</span>
+			<span id="ottawa-east" onclick="housing.add('ottawa-east')">Ottawa East</span>
+			<span id="ottawa-south" onclick="housing.add('ottawa-south')">Ottawa South</span>
+			<span id="ottawa-west" onclick="housing.add('ottawa-west')">Ottawa West</span>
+			<span id="parkwood-hills" onclick="housing.add('parkwood-hills')">Parkwood Hills</span>
+			<span id="pinecrest" onclick="housing.add('pinecrest')">Pinecrest</span>
+			<span id="rockcliffe" onclick="housing.add('rockcliffe')">Rockcliffe</span>
+			<span id="sandy-hill" onclick="housing.add('sandy-hill')">Sandy Hill</span>
+			<span id="south-keys" onclick="housing.add('south-keys')">South Keys</span>
+			<span id="vanier" onclick="housing.add('vanier')">Vanier</span>
+			<span id="westboro" onclick="housing.add('westboro')">Westboro</span>
+			<span id="other" onclick="housing.add('other')">Other</span>
+			<span id="all" onclick="housing.add('all')">All</span>
+		</div>
+		<div>Price: <input id="price" type="text" placeholder="Price <=" /></div>
+		<div>Type:</div>
+		<div class="type">
+			
+		</div>
+		<div><button onclick="housing.limit()">Limit!</button></div>
 	</div>
 	<div class="listing">
 		<% for posting in listing %>
 			<p><%= posting[5] %><p>
 		<% end %>
 	</div>
+	<script type="text/javascript" src="/sapphire.js"></script>
+	<script type="text/javascript" src="/app.js"></script>
 </body>
 </html>

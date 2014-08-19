@@ -25,7 +25,7 @@ def clean
 	#cleans pointless records... like ones without phone numbers etc
 end
 
-for n in 1..80 #currently there is a total of 80 pages of listings
+for n in 1..90 #currently there is a total of 80 pages of listings
 	page = Nokogiri::HTML(open("http://housing.carleton.ca/off-campus-housing/page/#{n}/"))
 	page.css('.posting').each do |link|
 		unless link.css('p')[3].nil?
@@ -38,9 +38,11 @@ for n in 1..80 #currently there is a total of 80 pages of listings
 				price = price.gsub(/,/, "")
 			end
 			furnished = false
-			link.css('p')[1].css('a').each do |href|
-				if href['href'] =~ /furnished/
-					furnished = true
+			for n in 1..4
+				link.css('p')[1].css('a').each do |href|
+					if href['href'] =~ /\/furnished\//
+						furnished = true
+					end
 				end
 			end
 			zone = "other"
@@ -140,13 +142,29 @@ for n in 1..80 #currently there is a total of 80 pages of listings
 					zone = "other"
 				end
 			end
+			type = "any"
+			case link.css('a')[0].text
+			when "Apartments"
+				type = "apartments"
+			when "Rooms"
+				type = "rooms"
+			when "Shared Apartments"
+				type = "shared-apartments"
+			when "Shared Townhouses / Houses"
+				type = "shared-townhouses-houses"
+			when "Townhouses / Houses"
+				type = "townhouses-houses"
+			else
+				type = "other"
+			end
 			puts id
 			puts price
 			puts furnished
 			puts zone
+			puts type
 			puts "inserting into DB"
-			sql = "INSERT INTO housing (id, price, furnished, zone, rawhtml) VALUES (:id, :price, :furnished, :zone, :rawhtml)"
-			db.execute(sql, :id => id.to_s, :price => price.to_s, :furnished => furnished.to_s, :zone => zone, :rawhtml => rawhtml.to_s)
+			sql = "INSERT INTO housing (id, price, furnished, zone, type, rawhtml) VALUES (:id, :price, :furnished, :zone, :type, :rawhtml)"
+			db.execute(sql, :id => id.to_s, :price => price.to_s, :furnished => furnished.to_s, :zone => zone, :type => type, :rawhtml => rawhtml.to_s)
 		end
 	end
 end
