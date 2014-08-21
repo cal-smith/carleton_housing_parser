@@ -3,7 +3,7 @@ require 'sqlite3'
 
 db = SQLite3::Database.new( "housing.db" )
 
-get '/' do
+get '/?' do
 	listing = db.execute("SELECT * FROM housing LIMIT 0, 100")
 	erb :index, :locals => {:listing => listing}
 end
@@ -12,26 +12,28 @@ end
 # price is upper price limit
 # furished is a simple true, false, or undefined option
 # type is the type of housing
-get '/limit/:zone/?:price?/?:furnished?/?:type?' do
+get '/limit/:zone/?:price?/?:furnished?/?:type?/?' do
 	zone = params[:zone].split('&').collect{|x| "'#{x}'"}.join(', ')
 	price = params[:price]
-	if params[:price].nil?
+	if params[:price].nil? or params[:price] == "all"
 		price = 5000
 	end
 	furnished = params[:furnished]
-	type = params[:type]
+	type = nil
+	if params[:type]
+		type = params[:type].split('&').collect{|x| "'#{x}'"}.join(', ')
+	end
 	sqlopts = []
 
 	if zone != "'all'"
 		sqlopts << "zone IN (#{zone})"
 	end
 
-	if type
-		type = type.split('&').collect{|x| "'#{x}'"}.join(', ')
-		sqlopts << "type = (#{type})"
+	if type !="'all'"
+		sqlopts << "type IN (#{type})"
 	end
 
-	if furnished
+	if furnished != "all"
 		sqlopts << "furnished = '#{furnished}'"
 	end
 

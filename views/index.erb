@@ -8,12 +8,12 @@
 	.controls{
 
 	}
-	.zones{
+	.select{
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
 	}
-	.zones span{
+	.select span{
 		margin: 5px;
 		background: aquamarine;
 		padding: 5px;
@@ -31,7 +31,7 @@
 	<div class="controls">
 		<h2>Limit by:</h2>
 		<div>Zones:</div>
-		<div class="zones">
+		<div class="select">
 			<span id="algonquin" onclick="housing.add('algonquin')">Algonquin</span>
 			<span id="alta-vista" onclick="housing.add('alta-vista')">Alta Vista</span>
 			<span id="aylmer" onclick="housing.add('aylmer')">Aylmer</span>
@@ -40,7 +40,7 @@
 			<span id="billings-bridge" onclick="housing.add('billings-bridge')">Billing’s Bridge</span>
 			<span id="britannia" onclick="housing.add('britannia')">Britannia</span>
 			<span id="byward-market" onclick="housing.add('byward-market')">Byward Market</span>
-			<span id="carlingwood" onclick="housing.add('carlingwood')">carlingwood</span>
+			<span id="carlingwood" onclick="housing.add('carlingwood')">Carlingwood</span>
 			<span id="central-west" onclick="housing.add('central-west')">Central West</span>
 			<span id="centretown" onclick="housing.add('centretown')">Centretown</span>
 			<span id="china-town" onclick="housing.add('china-town')">China Town</span>
@@ -81,8 +81,18 @@
 		</div>
 		<div>Price: <input id="price" type="text" placeholder="Price <=" /></div>
 		<div>Type:</div>
-		<div class="type">
-			
+		<div class="select">
+			<span id="apartments" onclick="housing.type('apartments')">Apartments</span>
+			<span id="rooms" onclick="housing.type('rooms')">Rooms</span>
+			<span id="shared apartments" onclick="housing.type('shared apartments')">Shared Apartments</span>
+			<span id="shared-townhouses-houses" onclick="housing.type('shared-townhouses-houses')">Shared Townhouses / Houses</span>
+			<span id="townhouses-houses" onclick="housing.type('townhouses-houses')">Townhouses / Houses</span>
+		</div>
+		<div>Furnished:</div>
+		<divv class="select">
+			<span id="true" onclick="housing.furnished('true')" >True</span>
+			<span id="false" onclick="housing.furnished('false')" >False</span>
+			<span id="allf" onclick="housing.furnished('all')" >All</span>
 		</div>
 		<div><button onclick="housing.limit()">Limit!</button></div>
 	</div>
