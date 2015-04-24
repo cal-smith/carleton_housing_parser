@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'sqlite3'
 
-db = SQLite3::Database.new( "housing.db" )
+db = SQLite3::Database.new("housing.db")
 
 get '/?' do
 	listing = db.execute("SELECT * FROM housing LIMIT 0, 100")
@@ -13,36 +13,41 @@ end
 # furished is a simple true, false, or undefined option
 # type is the type of housing
 get '/limit/:zone/?:price?/?:furnished?/?:type?/?' do
-	zone = params[:zone].split('&').collect{|x| "'#{x}'"}.join(', ')
-	price = params[:price]
-	if params[:price].nil? or params[:price] == "all"
-		price = 5000
-	end
-	furnished = params[:furnished]
-	type = nil
-	if params[:type]
-		type = params[:type].split('&').collect{|x| "'#{x}'"}.join(', ')
-	end
+	sql = "select * from housing where "
 	sqlopts = []
-
-	if zone != "'all'"
-		sqlopts << "zone IN (#{zone})"
+	array = []
+	unless params[:zone] == "all"
+		puts "no zone"
+		sqlopts << " zone in (#{params[:zone].split('&').collect{'?'}.join(',')}) "
+		array << params[:zone].split('&')
 	end
 
-	if type !="'all'"
-		sqlopts << "type IN (#{type})"
+	unless params[:type] == "all"
+		puts "no type"
+		sqlopts << " type in (#{params[:type].split('&').collect{'?'}.join(',')}) "
+		array << params[:type].split('&')
 	end
 
-	if furnished != "all"
-		sqlopts << "furnished = '#{furnished}'"
+	unless params[:furnished] == "all"
+		puts "no furns"
+		sqlopts << "furnished = ?"
+		array << [params[:furnished]]
 	end
 
-	if price
-		sqlopts << "price <= #{price} ORDER BY PRICE ASC"
+	if params[:price] == "all"
+		array << [5000]
+	else 
+		array << [params[:price]]
 	end
-	sqlopts = sqlopts.join(' AND ')
-	sql = "SELECT * FROM housing WHERE #{sqlopts} LIMIT 0, 100"
+
+	unless sqlopts.length == 0
+		sql << sqlopts.join(" and ") << " and "
+	end
+
+	sql << " price <= ? order by price asc "
 	puts sql
-	listing = db.execute(sql)
+	puts sqlopts
+	puts array
+	listing = db.execute(sql, array)
 	erb :index, :locals => {:listing => listing} 
 end
