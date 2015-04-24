@@ -1,31 +1,28 @@
 var store = window.localStorage;
 var housing = {
-	zones: [],
-	types: [],
-	level: "",
 	add: function(zone){
-		if (housing.zones.contains(zone)) {
-			var zones = housing.zones.delete(zone);
+		var zones = store.getItem("zones").split(",");
+		if (zones.contains(zone)) {
+			var zones = zones.delete(zone);
 			e(zone).classList.remove("selected");
 			store.setItem("zones", zones);
-			housing.zones = zones;
 		} else {
 			e(zone).classList.add("selected");
-			housing.zones.push(zone);
-			store.setItem("zones", housing.zones);
+			zones.push(zone);
+			store.setItem("zones", zones);
 		}
 	},
 
 	type: function(type){
-		if (housing.types.contains(type)) {
-			var types = housing.types.delete(type);
+		var types = store.getItem("types");
+		if (types.contains(type)) {
+			var types = types.delete(type);
 			e(type).classList.remove("selected");
 			store.setItem("types", types);
-			housing.types = types;
 		} else {
 			e(type).classList.add("selected");
-			housing.types.push(type);
-			store.setItem("types", housing.types);
+			types.push(type);
+			store.setItem("types", types);
 		}
 	},
 
@@ -38,49 +35,45 @@ var housing = {
 		} else {
 			e(level).classList.add("selected");
 		}
-		housing.level = level;
 		store.setItem("furnished", level);
 	},
 
 	limit: function(){
-		var host = window.location.host;
 		var price = e("price").value;
 		if (!price){
-			price = "all";
+			price = 5000;
 		}
 		store.setItem("price", price);
-		var zones = housing.zones.join("&") ? housing.zones.join("&") : "all";
-		var furnished = housing.level ? housing.level : "all";
-		var type = housing.types.join("&") ? housing.types.join("&") : "all";
-		var url = "http://" + host + "/limit/" + zones + "/" + price + "/" + furnished + "/" + type;
+		var zones = store.getItem("zones");
+		zones = zones.split(",").join("&") ? zones.split(",").join("&") : "all";
+		var furnished = store.getItem("furnished");
+		var type = store.getItem("types");
+		type = type.split(",").join("&") ? type.split(",").join("&") : "all";
+		var url = window.location.origin + "/limit/?zone=" + encodeURIComponent(zones) + "&price=" + price + "&furnished=" + furnished + "&type=" + encodeURIComponent(type);
 		window.location = url;
 	},
 
 	init: function(){
 		if (store.getItem("zones")) {
-			var zones = store.getItem("zones");
-			zones = zones.split(',');
-			housing.zones = zones;
+			var zones = store.getItem("zones").split(',');
 			zones.each(function(v){
 				e(v).classList.add("selected");
 			});
+		} else {
+			store.setItem("zones", "all");
 		}
 		
 		if (store.getItem("types")){
-			var types = store.getItem("types");
-			types = types.split(',');
-			housing.types = types;
+			var types = store.getItem("types").split(',');
 			types.each(function(v){
 				e(v).classList.add("selected");
 			});
 		} else {
-			//e("all").classList.add("selected");
 			store.setItem("types", "all");
 		}
 		
 		if (store.getItem("furnished")){
 			var furnished = store.getItem("furnished");
-			housing.level = furnished;
 			if (furnished === "all"){
 				e("allf").classList.add("selected");
 			} else {
@@ -92,8 +85,9 @@ var housing = {
 		}
 
 		if (store.getItem("price")) {
-			var price = store.getItem("price")
-			e("price").value = price;
+			e("price").value = store.getItem("price");
+		} else {
+			store.setItem("price", 5000);
 		}
 	}
 }
