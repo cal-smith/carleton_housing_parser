@@ -13,18 +13,21 @@ db.execute("CREATE TABLE IF NOT EXISTS housing (
 );")
 
 #loop untill we 404
-for n in 88..88 #currently there is a total of 88 pages of listings
+for n in 1..88 #currently there is a total of 88 pages of listings
 	page = Nokogiri::HTML(open("http://housing.carleton.ca/off-campus-housing/page/#{n}/"))
 	page.css('.posting').each do |link|
 		unless link.css('p')[3].nil?
 			id = link.css('p')[3].text.match(/[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]/)
+			
 			rawhtml = link
+			
 			price = link.css('p')[2].text.match(/\$[1-9](?:\d{0,4})(?:,\d{3})*(?:\.\d{3})*|\$\d+/)
 			price = price.to_s
 			price[0] = ""
 			if price =~ /,/
 				price = price.gsub(/,/, "")
 			end
+
 			furnished = false
 			for n in 1..4
 				link.css('p')[1].css('a').each do |href|
@@ -33,6 +36,7 @@ for n in 88..88 #currently there is a total of 88 pages of listings
 					end
 				end
 			end
+
 			zone = "other"
 			for i in 0..1
 				case link.css('a')[i].text
@@ -130,6 +134,7 @@ for n in 88..88 #currently there is a total of 88 pages of listings
 					zone = "other"
 				end
 			end
+
 			type = "any"
 			case link.css('a')[0].text
 			when "Apartments"
@@ -145,12 +150,14 @@ for n in 88..88 #currently there is a total of 88 pages of listings
 			else
 				type = "other"
 			end
+
 			puts id
 			puts price
 			puts furnished
 			puts zone
 			puts type
 			puts "inserting into DB"
+
 			sql = "INSERT INTO housing (id, price, furnished, zone, type, rawhtml) VALUES (:id, :price, :furnished, :zone, :type, :rawhtml)"
 			db.execute(sql, :id => id.to_s, :price => price.to_s, :furnished => furnished.to_s, :zone => zone, :type => type, :rawhtml => rawhtml.to_s)
 		end
