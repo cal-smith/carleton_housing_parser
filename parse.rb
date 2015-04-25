@@ -12,20 +12,8 @@ db.execute("CREATE TABLE IF NOT EXISTS housing (
 	rawhtml TEXT
 );")
 
-def init
-	#initial insert
-end
-
-def update
-	#daily update
-	#logs records changed
-end
-
-def clean
-	#cleans pointless records... like ones without phone numbers etc
-end
-
-for n in 1..90 #currently there is a total of 80 pages of listings
+#loop untill we 404
+for n in 88..88 #currently there is a total of 88 pages of listings
 	page = Nokogiri::HTML(open("http://housing.carleton.ca/off-campus-housing/page/#{n}/"))
 	page.css('.posting').each do |link|
 		unless link.css('p')[3].nil?
@@ -65,7 +53,7 @@ for n in 1..90 #currently there is a total of 80 pages of listings
 				when "Byward Market"
 					zone = "byward-market"
 				when "Carlingwood"
-					zone = "carlingwood"				
+					zone = "carlingwood"
 				when "Central West"
 					zone = "central-west"
 				when "Centretown"

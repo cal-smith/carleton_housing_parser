@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sqlite3'
 require 'json'
+require 'uri'
 
 db = SQLite3::Database.new("housing.db")
 
@@ -19,24 +20,26 @@ get '/limit/?.?:format?' do
 	sqlopts = []
 	array = []
 	unless params[:zone] == "all"
-		sqlopts << " zone in (#{params[:zone].split('&').collect{'?'}.join(',')}) "
-		array << params[:zone].split('&')
+		zones = URI.unescape(params[:zone]).split('&')
+		sqlopts << " zone in (#{zones.collect{'?'}.join(',')}) "
+		array << zones
 	end
 
 	unless params[:type] == "all"
-		sqlopts << " type in (#{params[:type].split('&').collect{'?'}.join(',')}) "
-		array << params[:type].split('&')
+		types = URI.unescape(params[:type]).split('&')
+		sqlopts << " type in (#{types.collect{'?'}.join(',')}) "
+		array << types
 	end
 
 	unless params[:furnished] == "all"
 		sqlopts << "furnished = ?"
-		array << [params[:furnished]]
+		array << [URI.unescape(params[:furnished])]
 	end
 
 	if params[:price] == "all"
 		array << [5000]
 	else 
-		array << [params[:price]]
+		array << [URI.unescape(params[:price])]
 	end
 
 	unless sqlopts.length == 0
